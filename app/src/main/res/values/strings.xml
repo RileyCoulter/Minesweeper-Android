@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BattleSweeper</string>
+    <string name="title_activity_tile">Tile</string>
+</resources>
