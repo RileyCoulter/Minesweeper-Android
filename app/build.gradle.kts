@@ -4,11 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.compose)}
 
 android {
-    namespace = "com.example.battlesweeper"
+    namespace = "com.rileycoulter.battlesweeper"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.battlesweeper"
+        applicationId = "com.rileycoulter.battlesweeper"
         minSdk = 30
         targetSdk = 35
         versionCode = 1
