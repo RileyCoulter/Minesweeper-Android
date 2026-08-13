@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import java.lang.System
 import androidx.lifecycle.viewModelScope
 import com.rileycoulter.battlesweeper.game.BattleSweeperGame.checkForWin
+import com.rileycoulter.battlesweeper.game.BattleSweeperGame.flagTile
 import com.rileycoulter.battlesweeper.game.BattleSweeperGame.revealAdjacentTiles
 import com.rileycoulter.battlesweeper.game.BattleSweeper_GameSettings
 import com.rileycoulter.battlesweeper.game.BattleSweeper_GameSettings_Presets
@@ -63,6 +64,7 @@ class BattleSweeperViewModel : ViewModel() {
                     gameStatus = GameStatus.Playing,
                     startTime = System.nanoTime(),
                     gameSettings = settings,
+                    flagMode = true
         )
         startTimer()
 
@@ -87,7 +89,11 @@ class BattleSweeperViewModel : ViewModel() {
                 board = state.board
             )
         }
-        // Unrevealed tile -> Reveal the tile
+        // Unrevealed tile + in flag mode -> flag the tile
+        else if (!state.board[position.row][position.col].isRevealed && state.flagMode) {
+            newBoard = flagTile(position = position, board = state.board)
+        }
+        // Unrevealed tile + not in flag mode -> Reveal the tile
         else {
             newBoard = BattleSweeperGame.revealTile(
                 board = state.board,

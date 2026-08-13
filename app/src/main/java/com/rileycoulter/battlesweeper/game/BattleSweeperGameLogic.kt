@@ -101,7 +101,7 @@ object BattleSweeperGame {
                 }
                 tempBoard[row].add(TileState(
                     isMine = currPosition in minePositions,
-                    isRevealed = true,
+                    isRevealed = false,
                     isFlagged = false,
                     adjacentMines = adjacentMines))
             }
@@ -111,14 +111,41 @@ object BattleSweeperGame {
         return tempBoard.map { it.toList() }
     }
 
+    //attempt to reveal the given tile only if it is not flagged.
     fun revealTile(position: Position, board: List<List<TileState>>): List<List<TileState>>  {
         Log.d("RileyBattlesweeper", "Tile was revealed! row = ${position.row} and col = ${position.col}!,")
+
+
+
         return  mutableListOf<MutableList<TileState>>().toList()
     }
 
+    //Attempt to reveal all 8 tiles surrounding the given tile only if the number of flags in
+    //the surrounding tiles is greater than or equal to the given tile's adjacent mine count.
     fun revealAdjacentTiles(position: Position, board: List<List<TileState>>): List<List<TileState>>  {
         Log.d("RileyBattlesweeper", "Adjacent tiles were revealed row = ${position.row} and col = ${position.col}!,")
         return mutableListOf<MutableList<TileState>>().toList()
+    }
+
+    //attempt to place a flag on the tile. If tile is already flagged, remove it.
+    //mine count updated separately
+    fun flagTile(position: Position, board: List<List<TileState>>): List<List<TileState>> {
+        Log.d("RileyBattlesweeper", "Tile was flagged! row = ${position.row} and col = ${position.col}!,")
+        var newBoard = mutableListOf<MutableList<TileState>>()
+        for (row in 0 until board.size) {
+            newBoard.add(mutableListOf<TileState>())
+            for (col in 0 until board[row].size) {
+                if (row == position.row && col == position.col) {
+                    newBoard[row].add(board[row][col].copy(isFlagged = !board[row][col].isFlagged))
+                }
+                else {
+                    newBoard[row].add(board[row][col].copy())
+                }
+
+            }
+        }
+        return newBoard.toList()
+
     }
 
     fun checkForWin() {
