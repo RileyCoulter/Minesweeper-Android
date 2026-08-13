@@ -148,6 +148,24 @@ object BattleSweeperGame {
 
     }
 
+    fun calcMinesRemaining(board: List<List<TileState>>): Int {
+        var currMinesOnBoard: Int = 0
+        var currFlagsOnBoard: Int = 0
+
+        for (row in 0 until board.size) {
+            for (col in 0 until board[row].size) {
+                if (board[row][col].isMine) {
+                    currMinesOnBoard += 1
+                }
+                if (board[row][col].isFlagged) {
+                    currFlagsOnBoard += 1
+                }
+            }
+        }
+        return Math.max(currMinesOnBoard - currFlagsOnBoard, 0)
+
+    }
+
     fun checkForWin() {
         Log.d("RileyBattlesweeper", "checking for a win!")
 

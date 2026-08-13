@@ -1,12 +1,14 @@
 package com.rileycoulter.battlesweeper.ViewModel
 
 import android.util.Log
+import androidx.collection.emptyLongSet
 import androidx.lifecycle.ViewModel
 import com.rileycoulter.battlesweeper.game.BattleSweeperGame
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.lang.System
 import androidx.lifecycle.viewModelScope
+import com.rileycoulter.battlesweeper.game.BattleSweeperGame.calcMinesRemaining
 import com.rileycoulter.battlesweeper.game.BattleSweeperGame.checkForWin
 import com.rileycoulter.battlesweeper.game.BattleSweeperGame.flagTile
 import com.rileycoulter.battlesweeper.game.BattleSweeperGame.revealAdjacentTiles
@@ -76,6 +78,8 @@ class BattleSweeperViewModel : ViewModel() {
 
         val state = _gameState.value
         var newBoard: List<List<TileState>> = state.board
+        var newMinesRemaining: Int = state.minesRemaining
+
         // Handle clicks if the game isn't currently being played
         if (state.gameStatus == GameStatus.NotStarted) {
             startNewGame(settings = state.gameSettings, startingPosition = position)
@@ -89,9 +93,10 @@ class BattleSweeperViewModel : ViewModel() {
                 board = state.board
             )
         }
-        // Unrevealed tile + in flag mode -> flag the tile
+        // Unrevealed tile + in flag mode -> flag the tile + update minecount accordingly
         else if (!state.board[position.row][position.col].isRevealed && state.flagMode) {
             newBoard = flagTile(position = position, board = state.board)
+            newMinesRemaining = calcMinesRemaining(newBoard)
         }
         // Unrevealed tile + not in flag mode -> Reveal the tile
         else {
@@ -104,7 +109,8 @@ class BattleSweeperViewModel : ViewModel() {
         // Update GameState
         newBoard.let {
             _gameState.value = state.copy(
-                board = it
+                board = it,
+                minesRemaining = newMinesRemaining
             )
         }
 
