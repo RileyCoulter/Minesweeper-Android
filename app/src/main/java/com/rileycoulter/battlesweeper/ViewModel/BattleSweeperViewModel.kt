@@ -66,7 +66,6 @@ class BattleSweeperViewModel : ViewModel() {
                     gameStatus = GameStatus.Playing,
                     startTime = System.nanoTime(),
                     gameSettings = settings,
-                    flagMode = true
         )
         startTimer()
 

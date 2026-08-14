@@ -111,20 +111,63 @@ object BattleSweeperGame {
         return tempBoard.map { it.toList() }
     }
 
-    //attempt to reveal the given tile only if it is not flagged.
+    //attempt to reveal the given tile only if it is not flagged and not revealed.
+    //if it has 0 adjacent bombs, reveal all adjacent tiles as well
     fun revealTile(position: Position, board: List<List<TileState>>): List<List<TileState>>  {
         Log.d("RileyBattlesweeper", "Tile was revealed! row = ${position.row} and col = ${position.col}!,")
+        val currTile = board[position.row][position.col]
 
+        if (currTile.isFlagged || currTile.isRevealed) {
+            return board
+        }
 
+        val newBoard = board.mapIndexed { row, rowTiles ->
+            rowTiles.mapIndexed { col, tile ->
+                if (row == position.row && col == position.col) {
+                    tile.copy(isRevealed = true)
+                } else {
+                    tile
+                }
+            }
+        }
 
-        return  mutableListOf<MutableList<TileState>>().toList()
+        if (currTile.adjacentMines == 0) {
+            return revealAdjacentTiles(position, newBoard)
+        }
+
+        return newBoard
     }
 
-    //Attempt to reveal all 8 tiles surrounding the given tile only if the number of flags in
-    //the surrounding tiles is greater than or equal to the given tile's adjacent mine count.
+    // Attempt to reveal all 8 tiles surrounding the given tile only if the number of flags in the
+    // surrounding tiles is greater than or equal to the given tile's adjacent mine count.
     fun revealAdjacentTiles(position: Position, board: List<List<TileState>>): List<List<TileState>>  {
         Log.d("RileyBattlesweeper", "Adjacent tiles were revealed row = ${position.row} and col = ${position.col}!,")
-        return mutableListOf<MutableList<TileState>>().toList()
+
+        var positionsToReveal: MutableSet<Position> = mutableSetOf<Position>()
+        var adjacentFlags: Int = 0
+        var newBoard: List<List<TileState>> = board
+
+        for (row in 0 until board.size) {
+            for (col in 0 until board[row].size) {
+                if (Math.abs(row - position.row) <= 1 && Math.abs(col - position.col) <= 1 && (row - position.row != 0 || col - position.col != 0)) {
+                    if (board[row][col].isFlagged) {
+                        adjacentFlags++
+                    }
+                    else {
+                        positionsToReveal.add(Position(row, col))
+                    }
+                }
+            }
+        }
+
+        if (adjacentFlags >= board[position.row][position.col].adjacentMines) {
+            for (pos in positionsToReveal) {
+                newBoard = revealTile(pos, newBoard)
+            }
+        }
+
+
+        return newBoard
     }
 
     //attempt to place a flag on the tile. If tile is already flagged, remove it.
