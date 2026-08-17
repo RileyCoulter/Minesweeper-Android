@@ -130,7 +130,7 @@ class BattleSweeperViewModel : ViewModel() {
 
     fun onFlagModeButtonClickHandler() {
         Log.d("RileyBattlesweeper", "Flag Mode Button was clicked!")
-
+        _gameState.value = _gameState.value.copy(flagMode = !_gameState.value.flagMode)
     }
 
     //coroutines

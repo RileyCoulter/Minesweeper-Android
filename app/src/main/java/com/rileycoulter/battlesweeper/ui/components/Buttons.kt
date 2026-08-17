@@ -14,7 +14,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.rileycoulter.battlesweeper.R
-
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ResetButton(
@@ -23,7 +30,7 @@ fun ResetButton(
     buttonWidth: Int,
     modifier: Modifier = Modifier
 ) {
-    //TODO: add state watcher to be able to change image based on state of game\
+    //TODO: add state watcher to be able to change image based on state of game
 
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
@@ -47,6 +54,9 @@ fun ResetButton(
     )
 }
 
+
+
+
 @Composable
 fun ToggleFlagButton(
     flagMode: Boolean,
@@ -55,20 +65,92 @@ fun ToggleFlagButton(
     modifier: Modifier = Modifier
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
 
-    Image(
-        painter = painterResource(
-            if (flagMode)
-                R.drawable.flag
-            else
-                R.drawable.mine
-        ),
-        contentDescription = "Flag Mode Button",
-        contentScale = ContentScale.FillBounds,
+
+    val buttonSize = buttonDiameter.dp
+    val buttonRadius = buttonSize / 2
+    val circleRadius = buttonRadius * 0.72f
+    val depthOffset = buttonSize * 0.023f
+    val iconSize = buttonSize * 0.65f
+
+    Box(
         modifier = modifier
+            .size(buttonSize)
             .clickable(
                 interactionSource = interactionSource,
-                indication = null,   // Removes the ripple effect (optional)
-                onClick = {onClick()} )
-    )
+                indication = null,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Canvas(
+            modifier = Modifier.size(buttonSize)
+        ) {
+            val radius = circleRadius.toPx()
+            val offset = depthOffset.toPx()
+
+            // Swap the highlight/shadow colors when pressed
+            val topLeftColor = if (pressed) {
+                Color.Gray
+            } else {
+                Color.White
+            }
+            val bottomRightColor = if (pressed) {
+                Color.White
+            } else {
+                Color.Gray
+            }
+            val centerColor = if (pressed) {
+                Color(0xFFC0C0C0)
+            } else {
+                Color.LightGray
+            }
+
+            // Top-left 3D effect
+            drawCircle(
+                color = topLeftColor,
+                radius = radius,
+                center = Offset(
+                    x = size.width / 2 - offset,
+                    y = size.height / 2 - offset
+                )
+            )
+
+            // Bottom-right 3D effect
+            drawCircle(
+                color = bottomRightColor,
+                radius = radius,
+                center = Offset(
+                    x = size.width / 2 + offset,
+                    y = size.height / 2 + offset
+                )
+            )
+
+            // Main button surface
+            drawCircle(
+                color = centerColor,
+                radius = radius,
+                center = Offset(
+                    x = size.width / 2,
+                    y = size.height / 2
+                )
+            )
+        }
+
+        Image(
+            painter = painterResource(
+                if (flagMode) {
+                    R.drawable.flag
+                } else {
+                    R.drawable.mine
+                }
+            ),
+            contentDescription = "Flag Mode Button",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.size(iconSize)
+        )
+    }
 }
+

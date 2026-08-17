@@ -125,9 +125,9 @@ fun LoginScreen(
                 )
                 {
                     ToggleFlagButton(
-                        flagMode = true,
+                        flagMode = gameState.flagMode,
                         onClick = viewModel::onFlagModeButtonClickHandler,
-                        buttonDiameter = 40,
+                        buttonDiameter = 56,
                         modifier = Modifier.Companion.size(40.dp)
                     )
 
