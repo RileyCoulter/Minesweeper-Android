@@ -23,11 +23,17 @@ fun Tile(
     onLongClick: () -> Unit,
     tileHeight: Int,
     tileWidth: Int,
+    isPressed: Boolean = false,
+    onPressedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
     ) {
     val interactionSource = remember { MutableInteractionSource() }
-
     val pressed by interactionSource.collectIsPressedAsState()
+
+    LaunchedEffect(pressed) {
+        onPressedChanged(pressed)
+    }
+
     val isRevealed = tileState.isRevealed
     val isMine = tileState.isMine
     val isFlagged = tileState.isFlagged
@@ -37,7 +43,7 @@ fun Tile(
             when {
                 //Tile not revealed
                 !isRevealed && isFlagged -> R.drawable.masked_tile_flag
-                !isRevealed && pressed -> R.drawable.revealed_tile
+                !isRevealed && isPressed -> R.drawable.revealed_tile
                 !isRevealed -> R.drawable.masked_tile
                 //Tile is revealed and is a mine
                 isMine -> R.drawable.revealed_tile_bomb

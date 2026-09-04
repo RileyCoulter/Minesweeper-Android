@@ -209,9 +209,12 @@ object BattleSweeperGame {
 
     }
 
-    fun checkForWin() {
+    fun checkForWin(board: List<List<TileState>>): Boolean {
         Log.d("RileyBattlesweeper", "checking for a win!")
 
+        return board.flatten()
+            .filter { !it.isMine }
+            .all { it.isRevealed }
     }
 
     fun endGame() {

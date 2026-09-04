@@ -114,7 +114,9 @@ class BattleSweeperViewModel : ViewModel() {
         }
 
         // Check whether the player has won
-        checkForWin()
+        if (checkForWin(newBoard)) {
+            Log.d("RileyBattlesweeper", "Congratulations!! You won!!!")
+        }
 
     }
 
