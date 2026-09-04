@@ -116,6 +116,8 @@ class BattleSweeperViewModel : ViewModel() {
         // Check whether the player has won
         if (checkForWin(newBoard)) {
             Log.d("RileyBattlesweeper", "Congratulations!! You won!!!")
+            stopTimer()
+            _gameState.value = _gameState.value.copy(gameStatus = GameStatus.Won)
         }
 
     }
@@ -152,6 +154,11 @@ class BattleSweeperViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        timerJob = null
     }
 
 }
