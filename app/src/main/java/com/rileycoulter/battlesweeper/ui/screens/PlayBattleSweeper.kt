@@ -34,20 +34,10 @@ import com.rileycoulter.battlesweeper.ui.components.ToggleFlagButton
 import com.rileycoulter.battlesweeper.util.UIConstants
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-class PlayBattleSweeper : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            LoginScreen()
-        }
-    }
-}
-
 
 @Preview(showBackground = true, showSystemUi = true, name = "GameScreen")
 @Composable
-fun LoginScreen(
+fun PlayBattleSweeperScreen(
     viewModel: BattleSweeperViewModel = viewModel()
 ) {
     val gameState by viewModel.gameState.collectAsState()
