@@ -4,7 +4,7 @@ BattleSweeper is a Minesweeper-inspired Android game built with Kotlin and Jetpa
 
 The project was created as a personal software development project to strengthen my experience with modern Android development, application architecture, and UI design. It is being developed incrementally, with an emphasis on maintaining a clean separation between game logic, application state, and the UI.
 
-![img.png](GameBoardScreenshot.png)
+![img.png](app/GameBoardScreenshot.png)
 
 ## Features
 
